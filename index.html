@@ -1,32 +1,1105 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>测试页面</title>
-    <link href="styles/style.css" rel="stylesheet">
-    <link  href="https://fonts.font.im/css?family=Open+Sans" rel="stylesheet" type="text/css">
+    <title>个人智能仪表盘</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, #e0f2fe 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            height: calc(100vh - 80px);
+            position: sticky;
+            top: 80px;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-links {
+            list-style: none;
+        }
+
+        .sidebar-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-links a {
+            text-decoration: none;
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .sidebar-links a:hover {
+            background: var(--bg);
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-card {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .hero-card h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-card p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .widget {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            margin-bottom: 2rem;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .widget-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .widget-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--bg);
+            color: var(--primary);
+        }
+
+        .weather-display {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .weather-temp {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .weather-desc {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .weather-item {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .weather-item i {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .clock {
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .date {
+            text-align: center;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-item {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .todo-item:hover {
+            background: var(--bg);
+        }
+
+        .todo-item.completed {
+            background: rgba(16, 185, 129, 0.1);
+            text-decoration: line-through;
+            color: var(--success);
+        }
+
+        .todo-item:not(.completed):hover {
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .todo-checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .notes {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .note {
+            background: var(--bg);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .note h4 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .bookmarks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .bookmark {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        .bookmark:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .news-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .news-meta {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .status-item {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .status-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .status-label {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .status-item.cpu .status-value {
+            color: var(--danger);
+        }
+
+        .status-item.memory .status-value {
+            color: var(--warning);
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .floating-action:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary);
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .dashboard-header {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-card h2 {
+                font-size: 1.5rem;
+            }
+            
+            .clock {
+                font-size: 2rem;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <h1>测试页面图片显示效果</h1>
-    <img src="F:\m\images\ceshi0353.png" alt="测试图片 火狐游览器图标">
-    <p>《中庸》有云”凡事预则立，不预则废“，必须在开始工作前做好计划。一个网站可以做到无所不及，但是初学者还是应该循序渐进。我们从编写一个简单的网页开始，其中包含一个标题、一张图片和几段文字。</p>
-    <p>注：复杂项目需要更详细的指引，包括颜色、字体、间距、编写规范等等。亦称为设计指南、设计系统、品牌手册，参见： FireFox Photon Design System 。</p>
-    <p>Mozilla 是一个全球社区，这里聚集着来自五湖四海的</p>
-    <ul>
-        <li>技术人员</li>
-        <li>建造者</li>
-        <li>时间管理</li>
-    </ul>
-    <ol>
-        <li>技术人员</li>
-        <li>建造者</li>
-        <li>时间管理</li>
-    </ol>
-    <p>
-    <a href="https://www.mozilla.org/zh-CN/about/manifesto/">Mozilla 宣言</a>
-    </p>
-    <button>切换用户</button>
-    <script src="scripts/main.js" defer></script>
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-chart-line"></i>
+            智能仪表盘
+        </div>
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="#dashboard">仪表盘</a></li>
+                <li><a href="#settings">设置</a></li>
+                <li><a href="#help">帮助</a></li>
+            </ul>
+        </nav>
+        <div class="user-section">
+            <span id="username">Lambda</span>
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section" data-aos="fade-right">
+            <h3 class="sidebar-title">
+                <i class="fas fa-th-large"></i>
+                快捷功能
+            </h3>
+            <ul class="sidebar-links">
+                <li><a href="#weather"><i class="fas fa-cloud-sun"></i> 天气</a></li>
+                <li><a href="#todo"><i class="fas fa-tasks"></i> 待办</a></li>
+                <li><a href="#notes"><i class="fas fa-sticky-note"></i> 笔记</a></li>
+                <li><a href="#clock"><i class="fas fa-clock"></i> 时钟</a></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-section" data-aos="fade-right" data-aos-delay="100">
+            <h3 class="sidebar-title">
+                <i class="fas fa-bookmark"></i>
+                收藏链接
+            </h3>
+            <ul class="sidebar-links">
+                <li><a href="#bookmarks"><i class="fas fa-globe"></i> 网页</a></li>
+                <li><a href="#docs"><i class="fas fa-file-alt"></i> 文档</a></li>
+                <li><a href="#tools"><i class="fas fa-wrench"></i> 工具</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section" data-aos="fade-right" data-aos-delay="200">
+            <h3 class="sidebar-title">
+                <i class="fas fa-cog"></i>
+                系统
+            </h3>
+            <ul class="sidebar-links">
+                <li><a href="#status"><i class="fas fa-server"></i> 状态</a></li>
+                <li><a href="#updates"><i class="fas fa-download"></i> 更新</a></li>
+                <li><a href="#logout"><i class="fas fa-sign-out-alt"></i> 退出</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="dashboard-header">
+            <div class="hero-card" data-aos="fade-up">
+                <h2 class="animate__animated animate__fadeInDown">欢迎回来！</h2>
+                <p class="animate__animated animate__fadeInUp">今天是美好的一天，让我们开始高效工作吧</p>
+            </div>
+            
+            <div class="widget" data-aos="fade-up" data-aos-delay="100">
+                <div class="widget-header">
+                    <h4 class="widget-title">
+                        <i class="fas fa-thermometer-half"></i>
+                        当前天气
+                    </h4>
+                </div>
+                <div class="weather-display" id="weather">
+                    <div class="weather-temp">24°C</div>
+                    <div class="weather-desc">晴朗 · 北京</div>
+                    <div class="weather-details">
+                        <div class="weather-item">
+                            <i class="fas fa-eye"></i>
+                            <div>能见度</div>
+                            <div>15km</div>
+                        </div>
+                        <div class="weather-item">
+                            <i class="fas fa-tint"></i>
+                            <div>湿度</div>
+                            <div>45%</div>
+                        </div>
+                        <div class="weather-item">
+                            <i class="fas fa-wind"></i>
+                            <div>风速</div>
+                            <div>5km/h</div>
+                        </div>
+                        <div class="weather-item">
+                            <i class="fas fa-cloud"></i>
+                            <div>云量</div>
+                            <div>20%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget" data-aos="fade-up" data-aos-delay="200">
+                <div class="widget-header">
+                    <h4 class="widget-title">
+                        <i class="fas fa-clock"></i>
+                        数字时钟
+                    </h4>
+                </div>
+                <div id="clock">
+                    <div class="date">加载中...</div>
+                    <div class="time">--:--:--</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="widget" data-aos="fade-up">
+            <div class="widget-header">
+                <h4 class="widget-title">
+                    <i class="fas fa-tasks"></i>
+                    今日待办事项
+                </h4>
+                <div class="widget-actions">
+                    <button class="btn" onclick="toggleModal('todoModal')">
+                        <i class="fas fa-plus"></i> 添加
+                    </button>
+                </div>
+            </div>
+            <ul class="todo-list" id="todoList">
+                <li class="todo-item completed">
+                    <input type="checkbox" class="todo-checkbox" checked>
+                    <span>完成前端页面设计</span>
+                </li>
+                <li class="todo-item">
+                    <input type="checkbox" class="todo-checkbox">
+                    <span>学习Python后端开发</span>
+                </li>
+                <li class="todo-item">
+                    <input type="checkbox" class="todo-checkbox">
+                    <span>阅读技术文档</span>
+                </li>
+                <li class="todo-item completed">
+                    <input type="checkbox" class="todo-checkbox" checked>
+                    <span>整理代码仓库</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="widget" data-aos="fade-up" data-aos-delay="100">
+            <div class="widget-header">
+                <h4 class="widget-title">
+                    <i class="fas fa-sticky-note"></i>
+                    快速笔记
+                </h4>
+                <div class="widget-actions">
+                    <button class="btn" onclick="toggleModal('noteModal')">
+                        <i class="fas fa-plus"></i> 新建
+                    </button>
+                </div>
+            </div>
+            <div class="notes" id="notes">
+                <div class="note">
+                    <h4>项目A技术方案</h4>
+                    <p>需要使用React+TypeScript重构现有系统，预计需要3周时间完成...</p>
+                </div>
+                <div class="note">
+                    <h4>会议纪要</h4>
+                    <p>今天的产品会议确定了新版本的功能需求，需要尽快更新开发计划...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="widget" data-aos="fade-up" data-aos-delay="200">
+            <div class="widget-header">
+                <h4 class="widget-title">
+                    <i class="fas fa-bookmark"></i>
+                    收藏链接
+                </h4>
+            </div>
+            <div class="bookmarks" id="bookmarks">
+                <a href="#" class="bookmark">
+                    <i class="fas fa-home"></i>
+                    <div>
+                        <div>首页</div>
+                        <small>dashboard.com</small>
+                    </div>
+                </a>
+                <a href="#" class="bookmark">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <div>邮件</div>
+                        <small>mail.com</small>
+                    </div>
+                </a>
+                <a href="#" class="bookmark">
+                    <i class="fas fa-calendar"></i>
+                    <div>
+                        <div>日历</div>
+                        <small>calendar.com</small>
+                    </div>
+                </a>
+                <a href="#" class="bookmark">
+                    <i class="fas fa-chart-bar"></i>
+                    <div>
+                        <div>数据分析</div>
+                        <small>analytics.com</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="widget" data-aos="fade-up" data-aos-delay="300">
+            <div class="widget-header">
+                <h4 class="widget-title">
+                    <i class="fas fa-newspaper"></i>
+                    最新资讯
+                </h4>
+            </div>
+            <div id="news">
+                <div class="news-item">
+                    <div class="news-title">人工智能技术取得重大突破</div>
+                    <div class="news-meta">
+                        <i class="fas fa-clock"></i> 2小时前 · 
+                        <i class="fas fa-user"></i> 科技日报
+                    </div>
+                    <p>最新研究显示，AI在图像识别领域准确率提升至99.8%...</p>
+                </div>
+                <div class="news-item">
+                    <div class="news-title">前端开发新趋势分析</div>
+                    <div class="news-meta">
+                        <i class="fas fa-clock"></i> 5小时前 · 
+                        <i class="fas fa-user"></i> 前端周刊
+                    </div>
+                    <p>React 18新特性在企业级应用中的实践案例分享...</p>
+                </div>
+                <div class="news-item">
+                    <div class="news-title">系统状态监控最佳实践</div>
+                    <div class="news-meta">
+                        <i class="fas fa-clock"></i> 1天前 · 
+                        <i class="fas fa-user"></i> 运维社区
+                    </div>
+                    <p>如何构建高效的系统监控告警体系，提升运维效率...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="widget" data-aos="fade-up" data-aos-delay="400">
+            <div class="widget-header">
+                <h4 class="widget-title">
+                    <i class="fas fa-server"></i>
+                    系统状态
+                </h4>
+            </div>
+            <div class="status-grid" id="systemStatus">
+                <div class="status-item cpu">
+                    <div class="status-value">23%</div>
+                    <div class="status-label">CPU使用率</div>
+                </div>
+                <div class="status-item memory">
+                    <div class="status-value">67%</div>
+                    <div class="status-label">内存使用率</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value">128GB</div>
+                    <div class="status-label">磁盘空间</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value">2.4G</div>
+                    <div class="status-label">网络速度</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <button class="floating-action" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- 模态框 -->
+    <div class="modal" id="todoModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="toggleModal('todoModal')">&times;</button>
+            <h3>添加待办事项</h3>
+            <div class="input-group">
+                <input type="text" id="todoTitle" placeholder="任务标题">
+            </div>
+            <div class="input-group">
+                <textarea id="todoDesc" rows="3" placeholder="任务描述"></textarea>
+            </div>
+            <button class="btn-primary" onclick="addTodoItem()">添加任务</button>
+        </div>
+    </div>
+
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="toggleModal('noteModal')">&times;</button>
+            <h3>创建新笔记</h3>
+            <div class="input-group">
+                <input type="text" id="noteTitle" placeholder="笔记标题">
+            </div>
+            <div class="input-group">
+                <textarea id="noteContent" rows="5" placeholder="笔记内容"></textarea>
+            </div>
+            <button class="btn-primary" onclick="addNote()">保存笔记</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // 初始化AOS动画
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // 侧边栏切换
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // 模态框切换
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // 时钟功能
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('zh-CN', {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const dateString = now.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            });
+            
+            document.querySelector('.time').textContent = timeString;
+            document.querySelector('.date').textContent = dateString;
+        }
+
+        // 每秒更新时钟
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 待办事项功能
+        function addTodoItem() {
+            const title = document.getElementById('todoTitle').value;
+            const desc = document.getElementById('todoDesc').value;
+            
+            if (!title) {
+                alert('请输入任务标题');
+                return;
+            }
+            
+            const todoList = document.getElementById('todoList');
+            const todoItem = document.createElement('li');
+            todoItem.className = 'todo-item';
+            todoItem.innerHTML = `
+                <input type="checkbox" class="todo-checkbox" onclick="toggleTodo(this)">
+                <span>${title}: ${desc}</span>
+            `;
+            
+            todoList.appendChild(todoItem);
+            toggleModal('todoModal');
+            document.getElementById('todoTitle').value = '';
+            document.getElementById('todoDesc').value = '';
+            
+            // 添加完成动画
+            todoItem.classList.add('animate__animated', 'animate__fadeInLeft');
+        }
+
+        function toggleTodo(checkbox) {
+            const todoItem = checkbox.parentNode;
+            todoItem.classList.toggle('completed', checkbox.checked);
+            checkbox.classList.toggle('checked', checkbox.checked);
+        }
+
+        // 笔记功能
+        function addNote() {
+            const title = document.getElementById('noteTitle').value;
+            const content = document.getElementById('noteContent').value;
+            
+            if (!title) {
+                alert('请输入笔记标题');
+                return;
+            }
+            
+            const notes = document.getElementById('notes');
+            const note = document.createElement('div');
+            note.className = 'note';
+            note.innerHTML = `
+                <h4>${title}</h4>
+                <p>${content}</p>
+            `;
+            
+            notes.appendChild(note);
+            toggleModal('noteModal');
+            document.getElementById('noteTitle').value = '';
+            document.getElementById('noteContent').value = '';
+            
+            note.classList.add('animate__animated', 'animate__fadeInUp');
+        }
+
+        // 系统状态模拟更新
+        function updateSystemStatus() {
+            const cpu = document.querySelector('.status-item.cpu .status-value');
+            const memory = document.querySelector('.status-item.memory .status-value');
+            
+            const cpuUsage = Math.floor(Math.random() * 40) + 10;
+            const memUsage = Math.floor(Math.random() * 30) + 50;
+            
+            cpu.textContent = cpuUsage + '%';
+            memory.textContent = memUsage + '%';
+            
+            // 添加脉冲效果
+            cpu.classList.add('pulse');
+            memory.classList.add('pulse');
+            
+            setTimeout(() => {
+                cpu.classList.remove('pulse');
+                memory.classList.remove('pulse');
+            }, 1000);
+        }
+
+        // 每5秒更新系统状态
+        setInterval(updateSystemStatus, 5000);
+
+        // 天气更新模拟
+        function updateWeather() {
+            const temps = ['18°C', '22°C', '24°C', '28°C', '32°C'];
+            const conditions = ['晴朗', '多云', '小雨', '阴天', '晴间多云'];
+            
+            const weatherTemp = document.querySelector('.weather-temp');
+            const weatherDesc = document.querySelector('.weather-desc');
+            
+            const randomTemp = temps[Math.floor(Math.random() * temps.length)];
+            const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
+            
+            weatherTemp.textContent = randomTemp;
+            weatherDesc.textContent = randomCondition + ' · 北京';
+            
+            // 添加更新动画
+            weatherTemp.classList.add('animate__animated', 'animate__pulse');
+            setTimeout(() => {
+                weatherTemp.classList.remove('animate__animated', 'animate__pulse');
+            }, 1000);
+        }
+
+        // 每分钟更新天气
+        setInterval(updateWeather, 60000);
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            // ESC键关闭所有模态框
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+            
+            // Ctrl+Shift+D 打开仪表盘
+            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                e.preventDefault();
+                window.location.reload();
+            }
+        });
+
+        // 鼠标滚动优化
+        document.addEventListener('wheel', function(e) {
+            if (e.deltaY > 100) {
+                console.log('快速向下滚动');
+            } else if (e.deltaY < -100) {
+                console.log('快速向上滚动');
+            }
+        }, { passive: true });
+
+        // 网络状态监控
+        window.addEventListener('online', function() {
+            console.log('网络已连接');
+            // 可以在这里添加重新连接API的逻辑
+        });
+
+        window.addEventListener('offline', function() {
+            console.log('网络已断开');
+            // 显示离线提示
+            alert('检测到网络连接已断开，请检查网络设置');
+        });
+
+        // 页面加载完成后的初始化
+        window.addEventListener('load', function() {
+            console.log('个人仪表盘已加载完成');
+            
+            // 添加页面加载动画
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // 响应式菜单切换
+        function toggleMobileMenu() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.toggle('mobile-active');
+        }
+
+        // 添加移动端优化
+        if (window.innerWidth <= 768) {
+            console.log('检测到移动端设备，已启用移动端优化');
+            
+            // 减少动画效果以提升性能
+            document.body.classList.add('mobile-device');
+        }
+    </script>
 </body>
 </html>
+
+
+
